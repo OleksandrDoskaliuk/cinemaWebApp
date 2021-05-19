@@ -35,7 +35,7 @@ public class MysqlScheduleSessionDaoImpl implements ScheduleSessionDao {
 						ScheduleItem sItem = new ScheduleItem();
 						sItem.setMovieName(rs.getString(k++));
 						sItem.setMovieDuration(rs.getInt(k++));
-						sItem.setStartTime(MysqlDateFormatter.getLocalDateTimeFromString(rs.getString(k++)));
+						sItem.setStartTime(rs.getString(k++).split(" ")[1]);
 						sItem.setReservedSeats(rs.getInt(k++));
 						scheduleItems.add(sItem);
 					}

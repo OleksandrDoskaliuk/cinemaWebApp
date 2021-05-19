@@ -3,12 +3,13 @@ package ua.lviv.elearn.odoskaliuk.cinema.db.bean;
 import java.time.LocalDateTime;
 
 import ua.lviv.elearn.odoskaliuk.cinema.db.util.MysqlDateFormatter;
+import ua.lviv.elearn.odoskaliuk.cinema.db.util.TimeDurationFormatter;
 
 
 public class ScheduleItem {
 	private String movieName;
-	private int movieDuration;
-	private LocalDateTime startTime;
+	private String movieDuration;
+	private String startTime;
 	private int reservedSeats;
 	
 	public ScheduleItem() {}
@@ -21,19 +22,19 @@ public class ScheduleItem {
 		this.movieName = movieName;
 	}
 
-	public int getMovieDuration() {
+	public String getMovieDuration() {
 		return movieDuration;
 	}
 
 	public void setMovieDuration(int movieDuration) {
-		this.movieDuration = movieDuration;
+		this.movieDuration = TimeDurationFormatter.getStringFromTimeDuration(movieDuration);
 	}
 
-	public LocalDateTime getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
@@ -47,7 +48,7 @@ public class ScheduleItem {
 
 	@Override
 	public String toString() {
-		return "ScheduleItem [movieName=" + movieName + ", movieDuration=" + movieDuration + ", startTime=" + MysqlDateFormatter.getStringFromLocalDateTime(startTime)
+		return "ScheduleItem [movieName=" + movieName + ", movieDuration=" + movieDuration + ", startTime=" + startTime
 				+ ", reservedSeats=" + reservedSeats + "]";
 	}
 	
