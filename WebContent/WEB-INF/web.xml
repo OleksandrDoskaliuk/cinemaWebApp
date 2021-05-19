@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<display-name>Cinema</display-name>
+	
+	<welcome-file-list>
+		<welcome-file>hello.jsp</welcome-file>
+	</welcome-file-list>
+
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>resources</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
+    <param-value>ru</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>locales</param-name>
+    <param-value>ru en</param-value>
+  </context-param>
+
+	
+<!--============================================================
+	Controller
+=============================================================
+	<servlet>
+		<servlet-name>Controller</servlet-name>
+		<servlet-class>ua.kharkov.knure.dkolesnikov.st4example.web.Controller</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Controller</servlet-name>
+		<url-pattern>/controller</url-pattern>
+	</servlet-mapping>
+	-->
+	
+
+	<servlet>
+		<servlet-name>servlet</servlet-name>
+		<servlet-class>servlet.Myservlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>servlet</servlet-name>
+		<url-pattern>/servlet</url-pattern>
+	</servlet-mapping>
+
+</web-app>
