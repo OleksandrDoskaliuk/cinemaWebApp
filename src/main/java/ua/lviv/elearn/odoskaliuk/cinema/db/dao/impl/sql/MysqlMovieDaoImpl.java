@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import ua.lviv.elearn.odoskaliuk.cinema.db.dao.DaoException;
@@ -17,7 +18,25 @@ public class MysqlMovieDaoImpl implements MovieDao {
 
 	@Override
 	public boolean create(Movie movie) throws DaoException {
-		throw new DaoException("Unsuported operation");
+		Connection con = null;
+		PreparedStatement ps = null;
+		boolean updated = false;
+		try {
+			con = DBManager.getInstance().getConnection();
+			ps = con.prepareStatement(Constants.INSERT_MOVIE);
+			int k = 1;
+			ps.setString(k++, movie.getName());
+			ps.setInt(k, movie.getDuration());
+			if (ps.executeUpdate() > 0) {
+				updated = true;
+			}
+		} catch (SQLException e) {
+			DBManager.getInstance().rollbackAndClose(con);
+			throw new DaoException(e);
+		} finally {
+			DBManager.getInstance().commitAndClose(con);
+		}
+		return updated;
 	}
 
 	@Override
@@ -40,7 +59,29 @@ public class MysqlMovieDaoImpl implements MovieDao {
 
 	@Override
 	public List<Movie> findAll() throws DaoException {
-		throw new DaoException("Unsuported operation");
+		List<Movie> movies = new ArrayList<Movie>();
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			con = DBManager.getInstance().getConnection();
+			st = con.createStatement();
+			rs = st.executeQuery(Constants.FIND_ALL_FILMS);
+			while (rs.next()) {
+				int k = 1;
+				Movie movie = new Movie();
+				movie.setMovieId(rs.getInt(k++));
+				movie.setName(rs.getString(k++));
+				movie.setDuration(rs.getInt(k));
+				movies.add(movie);
+			}
+		} catch (SQLException e) {
+			DBManager.getInstance().rollbackAndClose(con);
+			throw new DaoException(e);
+		} finally {
+			DBManager.getInstance().commitAndClose(con);
+		}
+		return movies;
 	}
 
 	@Override

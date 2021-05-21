@@ -52,8 +52,10 @@ public class DBManager {
 
 	public void commitAndClose(Connection con) {
 		try {
-			con.commit();
-			con.close();
+			if (con != null && !con.isClosed()) {
+				con.commit();
+				con.close();
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -61,8 +63,10 @@ public class DBManager {
 
 	public void rollbackAndClose(Connection con) {
 		try {
-			con.rollback();
-			con.close();
+			if (con != null && !con.isClosed()) {
+				con.rollback();
+				con.close();
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -11,43 +11,47 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.lviv.elearn.odoskaliuk.cinema.db.bean.ScheduleItem;
+import ua.lviv.elearn.odoskaliuk.cinema.db.bean.ScheduleItemBean;
 import ua.lviv.elearn.odoskaliuk.cinema.db.dao.DaoException;
 import ua.lviv.elearn.odoskaliuk.cinema.db.dao.ScheduleSessionDao;
 import ua.lviv.elearn.odoskaliuk.cinema.db.util.DBManager;
 import ua.lviv.elearn.odoskaliuk.cinema.db.util.MysqlDateFormatter;
+import ua.lviv.elearn.odoskaliuk.cinema.db.util.TimeDurationFormatter;
 import ua.lviv.elearn.odoskaliuk.cinema.entity.ScheduleSession;
 
 
 public class MysqlScheduleSessionDaoImpl implements ScheduleSessionDao {
 
-	public List<ScheduleItem> findScheduleItemsByScope(LocalDateTime fromDate, LocalDateTime toDate) throws DaoException {
-		List<ScheduleItem> scheduleItems = new ArrayList<ScheduleItem>();
-		try (Connection con = DBManager.getInstance().getConnection(); 
-				PreparedStatement ps = con.prepareStatement(Constants.FIND_SCHEDULE_BY_DATE_SCOPE)) {
-			ps.setString(1, MysqlDateFormatter.getStringFromLocalDateTime(fromDate));
-			ps.setString(2, MysqlDateFormatter.getStringFromLocalDateTime(toDate));
-			ResultSet rs = ps.executeQuery();
-			if (rs != null) {
-				try {
-					while (rs.next()) {
-						int k = 1;
-						ScheduleItem sItem = new ScheduleItem();
-						sItem.setMovieName(rs.getString(k++));
-						sItem.setMovieDuration(rs.getInt(k++));
-						sItem.setStartTime(rs.getString(k++).split(" ")[1]);
-						sItem.setReservedSeats(rs.getInt(k++));
-						scheduleItems.add(sItem);
-					}
-					rs.close();
-				} catch (SQLException e) {
-					throw e;
-				}
+	public List<ScheduleItemBean> findScheduleItemsByScope(LocalDateTime fromDate, LocalDateTime toDate) throws DaoException {
+		List<ScheduleItemBean> scheduleItemBeans = new ArrayList<ScheduleItemBean>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = DBManager.getInstance().getConnection();
+			ps = con.prepareStatement(Constants.FIND_SCHEDULE_BY_DATE_SCOPE);
+			int k = 1;
+			ps.setString(k++, MysqlDateFormatter.getStringFromLocalDateTime(fromDate));
+			ps.setString(k++, MysqlDateFormatter.getStringFromLocalDateTime(toDate));
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				k = 1;
+				ScheduleItemBean bean = new ScheduleItemBean();
+				bean.setSessionId(rs.getInt(k++));
+				bean.setMovieName(rs.getString(k++));
+				bean.setMovieDuration(TimeDurationFormatter.getStringFromTimeDuration(rs.getInt(k++)));
+				LocalDateTime movieStartTime = MysqlDateFormatter.getLocalDateTimeFromString(rs.getString(k));
+				bean.setMovieStartTime(MysqlDateFormatter.getStringTimeFromLocalDateTime(movieStartTime));
+				scheduleItemBeans.add(bean);
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
+			DBManager.getInstance().rollbackAndClose(con);
 			throw new DaoException(e);
+		} finally {
+			DBManager.getInstance().commitAndClose(con);
 		}
-		return scheduleItems;
+		return scheduleItemBeans;
 	}
 
 	@Override
