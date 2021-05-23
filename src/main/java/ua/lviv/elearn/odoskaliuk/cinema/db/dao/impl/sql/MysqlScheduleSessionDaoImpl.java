@@ -8,9 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.lviv.elearn.odoskaliuk.cinema.db.bean.DurationSessionBean;
 import ua.lviv.elearn.odoskaliuk.cinema.db.bean.ScheduleItemBean;
 import ua.lviv.elearn.odoskaliuk.cinema.db.dao.DaoException;
 import ua.lviv.elearn.odoskaliuk.cinema.db.dao.ScheduleSessionDao;
@@ -52,6 +54,35 @@ public class MysqlScheduleSessionDaoImpl implements ScheduleSessionDao {
 			DBManager.getInstance().commitAndClose(con);
 		}
 		return scheduleItemBeans;
+	}
+	
+	public List<DurationSessionBean> findDurationStartTimeByScope(LocalDateTime fromDate, LocalDateTime toDate) throws DaoException {
+		List<DurationSessionBean> startPoints = new ArrayList<DurationSessionBean>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = DBManager.getInstance().getConnection();
+			ps = con.prepareStatement(Constants.FIND_TIME_SESSION_START_TIME_BY_SCOPE);
+			ps.setString(1, MysqlDateFormatter.getStringFromLocalDateTime(fromDate));
+			ps.setString(2, MysqlDateFormatter.getStringFromLocalDateTime(toDate));
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				DurationSessionBean dsb = new DurationSessionBean();
+				LocalDateTime ldt = MysqlDateFormatter.getLocalDateTimeFromString(rs.getString(1));
+				int duration = rs.getInt(2);
+				dsb.setStartTime(ldt.toLocalTime());
+				dsb.setDuration(duration);
+				startPoints.add(dsb);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DBManager.getInstance().rollbackAndClose(con);
+			throw new DaoException(e);
+		} finally {
+			DBManager.getInstance().commitAndClose(con);
+		}
+		return startPoints;
 	}
 
 	@Override

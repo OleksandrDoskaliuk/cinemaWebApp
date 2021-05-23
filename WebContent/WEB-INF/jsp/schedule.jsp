@@ -35,7 +35,6 @@
 						<br>
 					</c:forEach>
 				</select>
-				
 				<input type="submit" value="Apply"/>
 			</form>
 			<br>

@@ -7,29 +7,12 @@
 <title>Administration page</title>
 </head>
 <body>
+
 	<form action="controller">
-		<input type = "hidden" name = "command" value = "showAllMovies">
-		<input type = "submit" value = "Show all movies">
- 	</form>
- 	
- 	<form action="controller">
-		<input type = "hidden" name = "command" value = "gotoCreateNewMovie">
-		<input type = "submit" value = "Create new movie">
- 	</form>
- 	
- 	<form action="controller">
-		<input type = "hidden" name = "command" value = "gotoAddMovieToSchedule">
-		<input type = "submit" value = "Add movie to schedule">
- 	</form>
- 	
- 	<form action="controller">
-		<input type = "hidden" name = "command" value = "gotoRemoveMovieFromSchedule">
-		<input type = "submit" value = "Remove movie from schedule">
- 	</form>
- 	
- 	<form action="controller">
-		<input type = "hidden" name = "command" value = "showCinemaHallAttendance">
-		<input type = "submit" value = "Show cinema hall attendance">
- 	</form>
+		<input type="hidden" name="command" value="adminCommand">
+		<input type = "submit" name="showMovies" value = "Show all movies">
+		<input type = "submit" name="showAttendance" value = "Show cinema hall attendance">
+	</form>
+	
 </body>
 </html>

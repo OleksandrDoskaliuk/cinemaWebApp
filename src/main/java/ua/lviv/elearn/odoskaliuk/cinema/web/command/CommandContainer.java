@@ -9,12 +9,11 @@ public class CommandContainer {
 	
 	static {
 		commands.put("schedule", new ScheduleСommand());
-		commands.put("adminPage", new AdminPageCommand());
+		commands.put("adminPage", new GotoAdminPageCommand());
+		commands.put("adminCommand", new AdminPageCommand());
 		commands.put("showAllMovies", new ShowAllMoviesCommand());
 		commands.put("addMovieToSchedule", new AddMovieToScheduleCommand());
 		commands.put("gotoAddMovieToSchedule", new GotoAddMovieToScheduleCommand());
-		commands.put("gotoRemoveMovieFromSchedule", new GotoRemoveMovieFromScheduleCommand());
-		commands.put("gotoCreateNewMovie", new GotoCreateNewMovieCommand());
 		commands.put("createNewMovie", new CreateNewMovieCommand());
 			
 		/*

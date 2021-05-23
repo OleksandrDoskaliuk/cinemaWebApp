@@ -28,5 +28,6 @@ public class Constants {
 	
 	public static final String FIND_ALL_FILMS = "select * from movies;";
 	public static final String INSERT_MOVIE = "INSERT INTO movies(name, duration) VALUES(?, ?);";
+	public static final String FIND_TIME_SESSION_START_TIME_BY_SCOPE = "select start_time, duration from sessions inner join movies on sessions.movie_id = movies.movie_id where sessions.start_time >= ? and sessions.start_time <= ?;";
 	
 }
